@@ -1,0 +1,14 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets (future-safe)
+.env
+.env.local
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
