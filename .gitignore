@@ -12,3 +12,12 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+
+# User uploads
+uploads/
+
+# Database dumps
+*.sql
+
+# Zip exports
+*.zip
