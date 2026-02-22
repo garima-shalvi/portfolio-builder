@@ -99,7 +99,7 @@ h1 {
 
   <div class="template-grid">
 
-    <!-- TEMPLATE 1 -->
+    
     <a href="portfolio.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template1-preview.png" alt="Template 1">
@@ -108,11 +108,19 @@ h1 {
       </div>
     </a>
 
-    <!-- TEMPLATE 2 -->
+    
     <a href="my_template.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template2-preview.png" alt="Template 2">
         <h3>Template 2</h3>
+        <button>Select Template</button>
+      </div>
+    </a>
+
+    <a href="temp-3.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+      <div class="template-card">
+        <img src="images/template3-preview.png" alt="Template 2">
+        <h3>Template 3</h3>
         <button>Select Template</button>
       </div>
     </a>
