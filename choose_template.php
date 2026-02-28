@@ -18,6 +18,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  
 }
 
 .container {
@@ -26,24 +27,29 @@ body {
 
 h1 {
   color: #fff;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   font-size: 2.5rem;
 }
 
 /* template grid */
 .template-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 320px);
   gap: 2.5rem;
-  flex-wrap: wrap;
   justify-content: center;
+  align-content: center;
 }
-
+@media (max-width: 750px) {
+  .template-grid {
+    grid-template-columns: 1fr;
+  }
+}
 /* template card */
 .template-card {
   width: 300px;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 18px;
-  padding: 1rem;
+  padding: 0.9rem;
   backdrop-filter: blur(10px);
   box-shadow:
     0 15px 35px rgba(0,0,0,0.25),
@@ -119,7 +125,15 @@ h1 {
 
     <a href="temp-3.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
       <div class="template-card">
-        <img src="images/template3-preview.png" alt="Template 2">
+        <img src="images/template3-preview.png" alt="Template 3">
+        <h3>Template 3</h3>
+        <button>Select Template</button>
+      </div>
+    </a>
+
+    <a href="temp-4.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+      <div class="template-card">
+        <img src="images/template4-preview.png" alt="Template 4">
         <h3>Template 3</h3>
         <button>Select Template</button>
       </div>
