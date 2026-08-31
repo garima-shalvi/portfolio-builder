@@ -1,43 +1,52 @@
 <?php
 require_once "db.php";
 
-$user_id = $_GET['user_id'] ?? 1;
-if (!$user_id) die("User not found");
+$portfolio_id = $_GET['pid'] ?? null;
+if (!$portfolio_id) die("Portfolio not found");
 
-/* ---------------- FETCH USER ---------------- */
-$stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
-$stmt->bind_param("i", $user_id);
+
+$stmt = $conn->prepare("
+    SELECT pd.*
+    FROM portfolio_details pd
+    WHERE pd.portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
+if (!$user) {
+    die("Portfolio details not found");
+}
+
 
 $education = [];
-$res = $conn->query("SELECT * FROM education WHERE user_id=$user_id");
+$res = $conn->query("SELECT * FROM education WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $education[] = $row;
 
-/* ---------------- FETCH SKILLS ---------------- */
+
 $skills = [];
-$res = $conn->query("SELECT skill_name FROM skills WHERE user_id=$user_id");
+$res = $conn->query("SELECT skill_name FROM skills WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $skills[] = $row['skill_name'];
 
-/* ---------------- FETCH PROJECTS ---------------- */
+
 $projects = [];
-$res = $conn->query("SELECT * FROM projects WHERE user_id=$user_id");
+$res = $conn->query("SELECT * FROM projects WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $projects[] = $row;
 
-/* ---------------- FETCH EXPERIENCE ---------------- */
+
 $experience = [];
-$res = $conn->query("SELECT * FROM experience WHERE user_id=$user_id");
+$res = $conn->query("SELECT * FROM experience WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $experience[] = $row;
 
-/* ---------------- FETCH CERTIFICATES ---------------- */
+
 $certificates = [];
-$res = $conn->query("SELECT * FROM certificates WHERE user_id=$user_id");
+$res = $conn->query("SELECT * FROM certificates WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $certificates[] = $row;
 
 $achievements = [];
-$res = $conn->query("SELECT * FROM achievements WHERE user_id=$user_id");
+$res = $conn->query("SELECT * FROM achievements WHERE portfolio_id=$portfolio_id");
 while ($row = $res->fetch_assoc()) $achievements[] = $row;
 
 ?>
@@ -597,3 +606,16 @@ document.querySelectorAll('section, .card, .certificate-card, .achievement-card'
 
 </body>
 </html>
+<?php if(isset($_GET['preview'])): ?>
+    <div style="text-align:center; padding:20px; background:#000;">
+        <a href="save_template.php?pid=<?php echo $portfolio_id; ?>&template=temp-3"
+           style="padding:12px 25px;
+                  background:#39e6d6;
+                  color:#000;
+                  font-weight:bold;
+                  border-radius:8px;
+                  text-decoration:none;">
+            💾 Save This Template
+        </a>
+    </div>
+<?php endif; ?>

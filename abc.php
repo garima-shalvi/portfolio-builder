@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+
+if(!isset($_SESSION['auth_id'])){
+    header("Location: login.php");
+    exit();
+}
+
+
+$portfolio_id = $_GET['portfolio_id'] ?? null;
+
+if(!$portfolio_id){
+    die("Portfolio not found");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -247,6 +264,7 @@ hr {
 <h1 class="metallic-text">Portfolio / Resume Builder</h1>
 
 <form method="POST" action="save.php" enctype="multipart/form-data">
+<input type="hidden" name="portfolio_id" value="<?php echo $portfolio_id; ?>">
 
 
 

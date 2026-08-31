@@ -1,9 +1,18 @@
 <?php
+
+session_start();
 require_once "db.php";
+$conn->begin_transaction();
 
-
+try{
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    die("Invalid access");
+    throw new Exception("Invalid access");
+}
+
+$portfolio_id = $_POST['portfolio_id'] ?? null;
+
+if(!$portfolio_id){
+    throw new Exception("Portfolio missing");
 }
 
 
@@ -41,26 +50,87 @@ if(!empty($_FILES['res']['name'])) {
     move_uploaded_file($_FILES['res']['tmp_name'], $resumePath);
 }
 
+$check = $conn->prepare("
+    SELECT id FROM portfolio_details WHERE portfolio_id = ?
+");
+$check->bind_param("i", $portfolio_id);
+$check->execute();
+$result = $check->get_result();
 
-$stmt = $conn->prepare("INSERT INTO users 
-    (name,email,phone,address,institution,linkedin,github,about,photo,resume) 
-    VALUES (?,?,?,?,?,?,?,?,?,?)");
+$exists = $result->num_rows > 0;
 
-$stmt->bind_param(
-    "ssssssssss",
-    $name, $email, $phone, $address, $institution,
-    $linkedin, $github, $about, $photoPath, $resumePath
-);
+$check->close();
+
+if($exists){
+
+    
+    $stmt = $conn->prepare("
+        UPDATE portfolio_details SET
+        name=?,
+        email=?,
+        phone=?,
+        address=?,
+        institution=?,
+        linkedin=?,
+        github=?,
+        about=?,
+        photo=IF(?='', photo, ?),
+        resume=IF(?='', resume, ?)
+        WHERE portfolio_id=?
+    ");
+
+    $stmt->bind_param(
+        "ssssssssssssi",
+        $name,
+        $email,
+        $phone,
+        $address,
+        $institution,
+        $linkedin,
+        $github,
+        $about,
+        $photoPath, $photoPath,
+        $resumePath, $resumePath,
+        $portfolio_id
+    );
+
+}else{
+
+    
+    $stmt = $conn->prepare("
+        INSERT INTO portfolio_details
+        (portfolio_id,name,email,phone,address,institution,linkedin,github,about,photo,resume)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+    ");
+
+    $stmt->bind_param(
+        "issssssssss",
+        $portfolio_id,
+        $name,
+        $email,
+        $phone,
+        $address,
+        $institution,
+        $linkedin,
+        $github,
+        $about,
+        $photoPath,
+        $resumePath
+    );
+}
 
 $stmt->execute();
-$user_id = $stmt->insert_id;
 $stmt->close();
 
 
 if(!empty($_POST['skills'])) {
-    $stmt = $conn->prepare("INSERT INTO skills(user_id, skill_name) VALUES (?,?)");
+    $del = $conn->prepare("DELETE FROM skills WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO skills(portfolio_id, skill_name) VALUES (?,?)");
     foreach($_POST['skills'] as $skill){
-        $stmt->bind_param("is", $user_id, $skill);
+        $stmt->bind_param("is", $portfolio_id, $skill);
         $stmt->execute();
     }
     $stmt->close();
@@ -68,11 +138,15 @@ if(!empty($_POST['skills'])) {
 
 
 if(!empty($_POST['degree'])){
-    $stmt = $conn->prepare("INSERT INTO education(user_id, degree, institute, duration, score) VALUES (?,?,?,?,?)");
+    $del = $conn->prepare("DELETE FROM education WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO education(portfolio_id, degree, institute, duration, score) VALUES (?,?,?,?,?)");
     for($i=0; $i<count($_POST['degree']); $i++){
         $stmt->bind_param(
             "issss",
-            $user_id,
+            $portfolio_id,
             $_POST['degree'][$i],
             $_POST['edu_institute'][$i],
             $_POST['edu_year'][$i],
@@ -85,11 +159,15 @@ if(!empty($_POST['degree'])){
 
 
 if(!empty($_POST['project_title'])){
-    $stmt = $conn->prepare("INSERT INTO projects(user_id,title,description,tech_stack,project_link) VALUES (?,?,?,?,?)");
+    $del = $conn->prepare("DELETE FROM projects WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO projects(portfolio_id,title,description,tech_stack,project_link) VALUES (?,?,?,?,?)");
     for($i=0; $i<count($_POST['project_title']); $i++){
         $stmt->bind_param(
             "issss",
-            $user_id,
+            $portfolio_id,
             $_POST['project_title'][$i],
             $_POST['project_desc'][$i],
             $_POST['tech_stack'][$i],
@@ -102,11 +180,15 @@ if(!empty($_POST['project_title'])){
 
 
 if(!empty($_POST['company'])){
-    $stmt = $conn->prepare("INSERT INTO experience(user_id,company,role,duration,description) VALUES (?,?,?,?,?)");
+    $del = $conn->prepare("DELETE FROM experience WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO experience(portfolio_id,company,role,duration,description) VALUES (?,?,?,?,?)");
     for($i=0; $i<count($_POST['company']); $i++){
         $stmt->bind_param(
             "issss",
-            $user_id,
+            $portfolio_id,
             $_POST['company'][$i],
             $_POST['role'][$i],
             $_POST['duration'][$i],
@@ -119,7 +201,11 @@ if(!empty($_POST['company'])){
 
 
 if(isset($_POST['cert_name'])){
-    $stmt = $conn->prepare("INSERT INTO certificates(user_id,certificate_name,certificate_file) VALUES (?,?,?)");
+    $del = $conn->prepare("DELETE FROM certificates WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO certificates(portfolio_id,certificate_name,certificate_file) VALUES (?,?,?)");
     for($i=0; $i<count($_POST['cert_name']); $i++){
         $certFilePath = '';
         if(isset($_FILES['cert_file']['name'][$i]) && $_FILES['cert_file']['error'][$i] == 0){
@@ -130,7 +216,7 @@ if(isset($_POST['cert_name'])){
 
         
         if(!empty($_POST['cert_name'][$i])){
-            $stmt->bind_param("iss", $user_id, $_POST['cert_name'][$i], $certFilePath);
+            $stmt->bind_param("iss", $portfolio_id, $_POST['cert_name'][$i], $certFilePath);
             $stmt->execute();
         }
     }
@@ -139,15 +225,27 @@ if(isset($_POST['cert_name'])){
 
 
 if(!empty($_POST['ach_title'])){
-    $stmt = $conn->prepare("INSERT INTO achievements(user_id,title,description) VALUES (?,?,?)");
+    $del = $conn->prepare("DELETE FROM achievements WHERE portfolio_id=?");
+    $del->bind_param("i",$portfolio_id);
+    $del->execute();
+    $del->close();
+    $stmt = $conn->prepare("INSERT INTO achievements(portfolio_id,title,description) VALUES (?,?,?)");
     for($i=0; $i<count($_POST['ach_title']); $i++){
-        $stmt->bind_param("iss",$user_id,$_POST['ach_title'][$i],$_POST['ach_desc'][$i]);
+        $stmt->bind_param("iss",$portfolio_id,$_POST['ach_title'][$i],$_POST['ach_desc'][$i]);
         $stmt->execute();
     }
     $stmt->close();
 }
 
 
-header("Location: choose_template.php?user_id=".$user_id);
+$conn->commit();
+
+header("Location: choose_template.php?pid=".$portfolio_id);
 exit();
+}
+catch(Exception $e) {
+   $conn->rollback();
+   die("Something went wrong: " . $e->getMessage());
+}
+
 ?>

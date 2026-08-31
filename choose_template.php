@@ -1,6 +1,6 @@
 <?php
-$user_id = $_GET['user_id'] ?? null;
-if (!$user_id) die("User not found");
+$portfolio_id = $_GET['pid'] ?? null;
+if (!$portfolio_id) die("Portfolio not found");
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ h1 {
   font-size: 2.5rem;
 }
 
-/* template grid */
+
 .template-grid {
   display: grid;
   grid-template-columns: repeat(2, 320px);
@@ -44,7 +44,7 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
-/* template card */
+
 .template-card {
   width: 300px;
   background: rgba(255, 255, 255, 0.12);
@@ -65,21 +65,21 @@ h1 {
     0 0 35px rgba(255,255,255,0.35);
 }
 
-/* preview image */
+
 .template-card img {
   width: 100%;
   border-radius: 12px;
   margin-bottom: 1rem;
 }
 
-/* template title */
+
 .template-card h3 {
   color: #fff;
   font-size: 1.3rem;
   margin: 0.5rem 0 1rem;
 }
 
-/* select button */
+
 .template-card button {
   padding: 12px 22px;
   border: none;
@@ -106,7 +106,7 @@ h1 {
   <div class="template-grid">
 
     
-    <a href="portfolio.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+    <a href="portfolio.php?pid=<?php echo $portfolio_id; ?>&preview=1" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template1-preview.png" alt="Template 1">
         <h3>Template 1</h3>
@@ -115,7 +115,7 @@ h1 {
     </a>
 
     
-    <a href="my_template.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+    <a href="my_template.php?pid=<?php echo $portfolio_id; ?>&preview=2" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template2-preview.png" alt="Template 2">
         <h3>Template 2</h3>
@@ -123,7 +123,7 @@ h1 {
       </div>
     </a>
 
-    <a href="temp-3.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+    <a href="temp-3.php?pid=<?php echo $portfolio_id; ?>&preview=3" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template3-preview.png" alt="Template 3">
         <h3>Template 3</h3>
@@ -131,10 +131,10 @@ h1 {
       </div>
     </a>
 
-    <a href="temp-4.php?user_id=<?php echo $user_id; ?>" style="text-decoration:none;">
+    <a href="temp-4.php?pid=<?php echo $portfolio_id; ?>&preview=4" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template4-preview.png" alt="Template 4">
-        <h3>Template 3</h3>
+        <h3>Template 4</h3>
         <button>Select Template</button>
       </div>
     </a>
