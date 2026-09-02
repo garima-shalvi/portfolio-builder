@@ -247,7 +247,12 @@ button,
     box-shadow:
         0 8px 20px rgba(0, 180, 216, 0.35);
 }
-
+.edit-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: #6a00c9;
+    color: white;
+}
 
 
 
@@ -501,6 +506,12 @@ button,
             >
                 👁 View Portfolio
             </a>
+            <a
+             href="abc.php?portfolio_id=<?php echo $portfolio['id']; ?>"
+              class="btn edit-btn"
+               >
+              ✏️ Edit Portfolio
+             </a>
 
         </div>
 

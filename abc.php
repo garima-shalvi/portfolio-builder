@@ -1,18 +1,154 @@
 <?php
 session_start();
 
-
 if(!isset($_SESSION['auth_id'])){
     header("Location: login.php");
     exit();
 }
 
+require_once "db.php";
 
 $portfolio_id = $_GET['portfolio_id'] ?? null;
 
 if(!$portfolio_id){
     die("Portfolio not found");
 }
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM portfolio_details
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$details = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if(!$details){
+    die("Portfolio details not found");
+}
+
+
+$education = [];
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM education
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $education[] = $row;
+}
+
+$stmt->close();
+
+
+$skills = [];
+
+$stmt = $conn->prepare("
+    SELECT skill_name
+    FROM skills
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $skills[] = $row['skill_name'];
+}
+
+$stmt->close();
+
+
+$projects = [];
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM projects
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $projects[] = $row;
+}
+
+$stmt->close();
+
+
+$experience = [];
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM experience
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $experience[] = $row;
+}
+
+$stmt->close();
+
+
+$certificates = [];
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM certificates
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $certificates[] = $row;
+}
+
+$stmt->close();
+
+
+$achievements = [];
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM achievements
+    WHERE portfolio_id = ?
+");
+
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+while($row = $result->fetch_assoc()){
+    $achievements[] = $row;
+}
+
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -270,29 +406,34 @@ hr {
 
 <h2 class="metallic-text">Personal Details</h2>
 <div class="block">
-<label>Name</label>
-<input type="text" name="name">
+<input type="text" name="name"
+       value="<?php echo htmlspecialchars($details['name']); ?>">
 
 <label>Email</label>
-<input type="email" name="email">
+<input type="email" name="email"
+       value="<?php echo htmlspecialchars($details['email']); ?>">
 
 <label>Phone</label>
-<input type="text" name="phone">
+<input type="text" name="phone"
+       value="<?php echo htmlspecialchars($details['phone']); ?>">
 
 <label>Address</label>
-<textarea name="address"></textarea>
+<textarea name="address"><?php echo htmlspecialchars($details['address']); ?></textarea>
 
 <label>Institution / College</label>
-<input type="text" name="inst">
+<input type="text" name="inst"
+       value="<?php echo htmlspecialchars($details['institution']); ?>">
 </div>
 
 <h2 class="metallic-text">More About Yourself</h2> 
 <div class="block">
 <label>Linkedin Profile Link</label>
-<input type="url" name="lik">
+<input type="url" name="lik"
+       value="<?php echo htmlspecialchars($details['linkedin']); ?>">
 
 <label>GitHub Profile Link</label>
-<input type="url" name="gith">
+<input type="url" name="gith"
+       value="<?php echo htmlspecialchars($details['github']); ?>">
 
 <label>Add Your Resume</label>
 <input type="file" name="res">
@@ -301,26 +442,63 @@ hr {
 <input type="file" name="pic">
 
 <label>Tell us about yourself</label>
-<textarea name="about" rows="6" placeholder="Write a short professional summary..."></textarea>
+<textarea name="about" rows="6"
+placeholder="Write a short professional summary..."><?php echo htmlspecialchars($details['about']); ?></textarea>
 </div>
 
 <h2 class="metallic-text">Education</h2>
 <div id="education-container">
+
+<?php if(!empty($education)): ?>
+
+    <?php foreach($education as $e): ?>
+
+        <div class="block">
+
+            <label>Degree / Class</label>
+            <input type="text"
+                   name="degree[]"
+                   value="<?php echo htmlspecialchars($e['degree']); ?>">
+
+            <label>Institute</label>
+            <input type="text"
+                   name="edu_institute[]"
+                   value="<?php echo htmlspecialchars($e['institute']); ?>">
+
+            <label>Duration</label>
+            <input type="text"
+                   name="edu_year[]"
+                   value="<?php echo htmlspecialchars($e['duration']); ?>">
+
+            <label>Score / CGPA</label>
+            <input type="text"
+                   name="edu_score[]"
+                   value="<?php echo htmlspecialchars($e['score']); ?>">
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
     <div class="block">
+
         <label>Degree / Class</label>
-        <input type="text" name="degree[]" placeholder="Bachelor's of Computer Science and Engineering">
+        <input type="text" name="degree[]">
 
         <label>Institute</label>
         <input type="text" name="edu_institute[]">
 
         <label>Duration</label>
-        <input type="text" name="edu_year[]" placeholder="2024 / 2024-2025">
+        <input type="text" name="edu_year[]">
 
         <label>Score / CGPA</label>
         <input type="text" name="edu_score[]">
 
-        
     </div>
+
+<?php endif; ?>
+
 </div>
 <button type="button" onclick="addEducation()">➕ Add Education</button>
 
@@ -337,7 +515,39 @@ hr {
 
 <h2 class="metallic-text">Projects</h2>
 <div id="projects-container">
+
+<?php if(!empty($projects)): ?>
+
+    <?php foreach($projects as $p): ?>
+
+        <div class="block">
+
+            <label>Project Title</label>
+            <input type="text"
+                   name="project_title[]"
+                   value="<?php echo htmlspecialchars($p['title']); ?>">
+
+            <label>Description</label>
+            <textarea name="project_desc[]"><?php echo htmlspecialchars($p['description']); ?></textarea>
+
+            <label>Tech Stack</label>
+            <input type="text"
+                   name="tech_stack[]"
+                   value="<?php echo htmlspecialchars($p['tech_stack']); ?>">
+
+            <label>Project Link</label>
+            <input type="url"
+                   name="project_link[]"
+                   value="<?php echo htmlspecialchars($p['project_link']); ?>">
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
     <div class="block">
+
         <label>Project Title</label>
         <input type="text" name="project_title[]">
 
@@ -345,18 +555,54 @@ hr {
         <textarea name="project_desc[]"></textarea>
 
         <label>Tech Stack</label>
-        <input type="text" name="tech_stack[]" placeholder="HTML, CSS, JavaScript">
+        <input type="text" name="tech_stack[]">
 
         <label>Project Link</label>
-        <input type="url" name="project_link[]" placeholder="GitHub Link" >
+        <input type="url" name="project_link[]">
+
     </div>
+
+<?php endif; ?>
+
 </div>
 <button type="button" onclick="addProject()">➕ Add Project</button>
 
 
 <h2 class="metallic-text">Experience</h2>
 <div id="experience-container">
+
+<?php if(!empty($experience)): ?>
+
+    <?php foreach($experience as $ex): ?>
+
+        <div class="block">
+
+            <label>Company Name</label>
+            <input type="text"
+                   name="company[]"
+                   value="<?php echo htmlspecialchars($ex['company']); ?>">
+
+            <label>Role</label>
+            <input type="text"
+                   name="role[]"
+                   value="<?php echo htmlspecialchars($ex['role']); ?>">
+
+            <label>Duration</label>
+            <input type="text"
+                   name="duration[]"
+                   value="<?php echo htmlspecialchars($ex['duration']); ?>">
+
+            <label>Description</label>
+            <textarea name="exp_desc[]"><?php echo htmlspecialchars($ex['description']); ?></textarea>
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
     <div class="block">
+
         <label>Company Name</label>
         <input type="text" name="company[]">
 
@@ -368,7 +614,11 @@ hr {
 
         <label>Description</label>
         <textarea name="exp_desc[]"></textarea>
+
     </div>
+
+<?php endif; ?>
+
 </div>
 <button type="button" onclick="addExperience()">➕ Add Experience</button>
 
@@ -376,13 +626,53 @@ hr {
 <h2 class="metallic-text">Certificates</h2>
 
 <div id="certificate-container">
+
+<?php if(!empty($certificates)): ?>
+
+    <?php foreach($certificates as $c): ?>
+
+        <div class="block">
+
+            <label>Certificate Name</label>
+
+            <input type="text"
+                   name="cert_name[]"
+                   value="<?php echo htmlspecialchars($c['certificate_name']); ?>">
+
+            <label>Upload Certificate</label>
+
+            <input type="file" name="cert_file[]">
+
+            <?php if(!empty($c['certificate_file'])): ?>
+
+                <p style="margin-top:10px;">
+                    Existing certificate:
+                    <a href="<?php echo htmlspecialchars($c['certificate_file']); ?>"
+                       target="_blank">
+                        View Certificate
+                    </a>
+                </p>
+
+            <?php endif; ?>
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
     <div class="block">
+
         <label>Certificate Name</label>
         <input type="text" name="cert_name[]">
 
         <label>Upload Certificate</label>
         <input type="file" name="cert_file[]">
+
     </div>
+
+<?php endif; ?>
+
 </div>
 
 <button type="button" onclick="addCertificate()">➕ Add Certificate</button>
@@ -390,13 +680,41 @@ hr {
 <h2 class="metallic-text">Achievements</h2>
 
 <div id="achievement-container">
+
+<?php if(!empty($achievements)): ?>
+
+    <?php foreach($achievements as $a): ?>
+
+        <div class="block">
+
+            <label>Achievement Title</label>
+
+            <input type="text"
+                   name="ach_title[]"
+                   value="<?php echo htmlspecialchars($a['title']); ?>">
+
+            <label>Description</label>
+
+            <textarea name="ach_desc[]"><?php echo htmlspecialchars($a['description']); ?></textarea>
+
+        </div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
     <div class="block">
+
         <label>Achievement Title</label>
         <input type="text" name="ach_title[]">
 
         <label>Description</label>
-        <textarea name="ach_desc[]" placeholder="Hackathon winner, scholarship, competition rank, etc."></textarea>
+        <textarea name="ach_desc[]"></textarea>
+
     </div>
+
+<?php endif; ?>
+
 </div>
 
 <button type="button" onclick="addAchievement()">➕ Add Achievement</button>
@@ -485,7 +803,25 @@ function addExperience() {
     `);
 }
 
-let skills = [];
+let skills = <?php echo json_encode($skills); ?>;
+function displaySkills() {
+    const list = document.getElementById("skillsList");
+
+    list.innerHTML = "";
+
+    skills.forEach(s => {
+        const chip = document.createElement("div");
+
+        chip.className = "skill-chip";
+
+        chip.innerHTML =
+            `${s} <span onclick="removeSkill('${s}')">&times;</span>`;
+
+        list.appendChild(chip);
+    });
+}
+
+displaySkills();
 
 function addSkill() {
     const skillInput = document.getElementById("skillInput");
