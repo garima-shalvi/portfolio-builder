@@ -182,28 +182,56 @@ section h1{
 }
 
 
-.skills-container{
-  overflow:hidden;
-  white-space:nowrap;
-  padding:10px 0;
-  margin:0 auto;
+.skills-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    margin: 0 auto;
 }
-.skills-track{
-  display:inline-block;
-  animation: scrollSkills 2s linear infinite;
+
+.skills-track {
+    display: flex;
+    width: max-content;
+    animation: scrollSkills 12s linear infinite;
 }
-.skill{
-    box-shadow:0px 0px 3px 3px rgba(139, 247, 236, 0.91);
-  display:inline-block;
-  margin:0 15px;
-  padding:8px 14px;
-  border-radius:20px;
-  background:rgba(57,230,214,.2);
-  font-weight:600;
-  transition:1.7s;
+
+.skills-group {
+    width: 100vw;
+    min-width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-shrink: 0;
 }
-.skill:hover{
-transform:scale(1.2);
+
+.skill {
+    box-shadow: 0px 0px 3px 3px rgba(139, 247, 236, 0.91);
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 25px;
+    background: rgba(57, 230, 214, 0.2);
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.skill:hover {
+    transform: scale(1.2);
+}
+
+@keyframes scrollSkills {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.skills-track:hover {
+    animation-play-state: paused;
 }
 
 .certs{
@@ -250,10 +278,7 @@ transform:scale(1.2);
 }
 
 
-@keyframes scrollSkills{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-50%);}
-}
+
 @keyframes float{
   0%{transform:translateY(0);}
   100%{transform:translateY(-10px);}
@@ -317,17 +342,24 @@ footer{
 
 
 <section>
-<h1>⚡Skills⚡</h1>
-<div class="skills-container">
-  <div class="skills-track">
-    <?php foreach($skills as $s): ?>
-      <span class="skill"><?php echo $s; ?></span>
-    <?php endforeach; ?>
-    <?php foreach($skills as $s): ?>
-      <span class="skill"><?php echo $s; ?></span>
-    <?php endforeach; ?>
-  </div>
-</div>
+    <h1>⚡Skills⚡</h1>
+
+    <div class="skills-container">
+        <div class="skills-track">
+
+            <div class="skills-group">
+                <?php foreach($skills as $s): ?>
+                    <span class="skill"><?php echo htmlspecialchars($s); ?></span>
+                <?php endforeach; ?>
+            </div>
+            <div class="skills-group">
+                <?php foreach($skills as $s): ?>
+                    <span class="skill"><?php echo htmlspecialchars($s); ?></span>
+                <?php endforeach; ?>
+            </div>
+
+        </div>
+    </div>
 </section>
 
 
