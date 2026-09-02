@@ -21,3 +21,5 @@ uploads/
 
 # Zip exports
 *.zip
+
+/vendor/
