@@ -39,152 +39,138 @@ $stmt->close();
 <title>Dashboard | CareerCanvas</title>
 
 <style>
-
 * {
     box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
 }
 
 body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(135deg, #e8f9fb, #f4f7fb, #dff6ff);
     min-height: 100vh;
     color: #023047;
+    background: linear-gradient(165deg, #2699E6, #1a66cc, #0d33b3, #000099);
+    background-size: 300% 300%;
+    animation: gradientMove 12s ease infinite;
 }
 
-
-
-
 .navbar {
-    background: linear-gradient(135deg, #052a62, #0077b6);
-    color: white;
+    width: 100%;
     padding: 18px 6%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    box-shadow: 0 8px 25px rgba(0, 119, 182, 0.25);
+    background: rgba(0, 0, 80, 0.25);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.35);
+    box-shadow: 0 5px 25px rgba(0, 0, 80, 0.25);
 }
 
 .navbar h2 {
     margin: 0;
     font-size: 25px;
+    font-weight: 700;
+    color: #00ffff;
     letter-spacing: 0.5px;
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.35);
 }
 
 .logout {
     color: white;
     text-decoration: none;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 9px 18px;
-    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 30px;
     transition: 0.3s ease;
 }
 
 .logout:hover {
-    background: rgba(255,255,255,0.15);
+    background: #00ffff;
+    color: #003366;
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
 }
-
-
-
 
 .container {
     width: 85%;
     max-width: 1050px;
-    margin: 60px auto;
+    margin: 55px auto;
 }
 
-
-
-
 .welcome {
-    margin-bottom: 35px;
+    margin-bottom: 30px;
     animation: fadeIn 0.8s ease;
 }
 
 .welcome h1 {
     margin: 0 0 10px;
     font-size: 38px;
-    color: #052a62;
+    color: white;
+    font-weight: 700;
 }
 
 .welcome h1 span {
-    color: #00a2b8;
+    color: #00ffff;
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
 }
 
 .welcome p {
     margin: 0;
-    font-size: 17px;
-    color: #4c6475;
+    color: #bffcff;
+    font-size: 16px;
 }
 
-
-
-
 .portfolio-card {
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.97);
     padding: 35px;
     border-radius: 22px;
-
-    box-shadow:
-        0 20px 50px rgba(6, 101, 133, 0.15);
-
-    border: 1px solid rgba(144, 219, 244, 0.5);
-
+    border: 1px solid rgba(0, 255, 255, 0.45);
+    box-shadow: 0 20px 50px rgba(0, 30, 100, 0.3);
     animation: fadeIn 0.9s ease;
-
     transition: 0.3s ease;
 }
 
 .portfolio-card:hover {
     transform: translateY(-4px);
-
-    box-shadow:
-        0 25px 60px rgba(6, 101, 133, 0.22);
+    box-shadow: 0 25px 60px rgba(0, 255, 255, 0.2);
 }
 
 .portfolio-card h2 {
     margin-top: 0;
     margin-bottom: 25px;
-    color: #052a62;
-    font-size: 28px;
+    color: #083188;
+    font-size: 27px;
 }
-
-
-
 
 .portfolio-info {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
 }
 
 .info-item {
-    background: #f2fbfd;
-    padding: 15px 18px;
+    background: #e8f9fb;
+    padding: 16px 18px;
     border-radius: 12px;
     border-left: 4px solid #00b4d8;
 }
 
 .info-item strong {
     display: block;
-    color: #052a62;
-    margin-bottom: 5px;
+    color: #083188;
+    margin-bottom: 6px;
+    font-size: 14px;
 }
 
 .info-item span {
-    color: #4c6475;
+    color: #31556b;
+    font-size: 14px;
 }
-
-
-
 
 .url-title {
     font-weight: 700;
-    color: #052a62;
+    color: #083188;
     margin-bottom: 10px;
 }
 
@@ -196,114 +182,99 @@ body {
 
 .url-box input {
     flex: 1;
+    min-width: 0;
     padding: 14px 16px;
-
     border: 1px solid #bde0fe;
     border-radius: 12px;
-
     font-size: 14px;
     color: #34495e;
     background: #f8fdff;
-
-    min-width: 0;
 }
 
 .url-box input:focus {
     outline: none;
-    border-color: #00a2b8;
+    border-color: #00b4d8;
     box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
 }
 
-
-
-
 button,
 .btn {
-    padding: 13px 22px;
+    display: inline-block;
+    padding: 12px 22px;
     border: none;
     border-radius: 30px;
-
     cursor: pointer;
     text-decoration: none;
-
-    font-size: 15px;
-    font-weight: 600;
-
+    font-size: 14px;
+    font-weight: 700;
     transition: 0.3s ease;
 }
 
-
-
-
 .copy-btn {
-    background: linear-gradient(135deg, #00a2b8, #00b4d8);
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
     color: white;
     white-space: nowrap;
 }
 
 .copy-btn:hover {
     transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 20px rgba(0, 180, 216, 0.35);
+    box-shadow: 0 8px 20px rgba(0, 180, 216, 0.4);
 }
-.edit-btn {
-    display: inline-block;
-    margin-top: 20px;
-    background: #6a00c9;
-    color: white;
-}
-
-
 
 .view-btn {
-    display: inline-block;
     margin-top: 25px;
-
-    background: linear-gradient(135deg, #052a62, #0077b6);
+    background: linear-gradient(135deg, #083188, #0077b6);
     color: white;
 }
 
 .view-btn:hover {
     transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 25px rgba(0, 119, 182, 0.35);
+    box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
 }
 
-
-
-
-.create-btn {
-    display: inline-block;
-    margin-top: 20px;
-
+.edit-btn {
+    margin-top: 25px;
+    margin-left: 8px;
     background: linear-gradient(135deg, #0077b6, #00b4d8);
     color: white;
 }
 
-.create-btn:hover {
+.edit-btn:hover {
     transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 25px rgba(0, 180, 216, 0.35);
+    box-shadow: 0 10px 25px rgba(0, 180, 216, 0.4);
 }
 
+.ai-btn {
+    margin-top: 25px;
+    margin-left: 8px;
+    background: linear-gradient(135deg, #1a66cc, #2699E6);
+    color: white;
+}
 
-/
+.ai-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(38, 153, 230, 0.45);
+}
+
+.create-btn {
+    margin-top: 20px;
+    background: #00ffff;
+    color: #003366;
+    border: 2px solid white;
+}
+
+.create-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 255, 255, 0.4);
+}
 
 .success {
     color: #008f9c;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 12px;
-
     display: none;
-
     animation: fadeIn 0.3s ease;
 }
-
-
-
 
 .empty-card {
     text-align: center;
@@ -323,11 +294,21 @@ button,
     color: #647b89;
 }
 
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
 
+    50% {
+        background-position: 100% 50%;
+    }
 
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
 @keyframes fadeIn {
-
     from {
         opacity: 0;
         transform: translateY(20px);
@@ -337,14 +318,9 @@ button,
         opacity: 1;
         transform: translateY(0);
     }
-
 }
 
-
-
-
 @media (max-width: 700px) {
-
     .navbar {
         padding: 16px 25px;
     }
@@ -374,8 +350,14 @@ button,
         width: 100%;
     }
 
+    .view-btn,
+    .edit-btn,
+    .ai-btn {
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
 }
-
 </style>
 
 </head>
@@ -512,6 +494,7 @@ button,
                >
               ✏️ Edit Portfolio
              </a>
+             <a href="ai_review.html" class="btn ai-btn">🤖 AI Career Review</a>
 
         </div>
 
