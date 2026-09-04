@@ -1,0 +1,261 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #0b1020;
+    color: #e8edf7;
+}
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: auto;
+    padding: 35px 0 60px;
+}
+
+.back {
+    color: #aab8d8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.back:hover {
+    color: #8b9cff;
+}
+
+.header {
+    text-align: center;
+    margin: 45px 0 35px;
+}
+
+.header h1 {
+    margin-bottom: 12px;
+    font-size: 38px;
+    color: #f1f4fb;
+    font-weight: 700;
+}
+
+.header p {
+    margin: 0;
+    color: #929db5;
+    font-size: 15px;
+}
+
+.score-card,
+.categories,
+.section {
+    background: #12192b;
+    border: 1px solid #252e45;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.score-card {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.score-circle {
+    width: 155px;
+    height: 155px;
+    border-radius: 50%;
+    border: 6px solid #6877ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    background: #0e1424;
+    box-shadow: 0 0 30px rgba(104, 119, 255, 0.18);
+}
+
+.score-circle span {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.score-circle small {
+    margin-top: -5px;
+    color: #7f8aa4;
+    font-size: 13px;
+}
+
+.score-card h2 {
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.score-card p {
+    margin: 0;
+    color: #929db5;
+    font-size: 14px;
+}
+
+h2 {
+    color: #f1f4fb;
+}
+
+.categories h2 {
+    margin-top: 0;
+    margin-bottom: 28px;
+    font-size: 22px;
+}
+
+.category {
+    margin: 22px 0;
+}
+
+.category:first-child {
+    margin-top: 0;
+}
+
+.category:last-child {
+    margin-bottom: 0;
+}
+
+.category-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 9px;
+    color: #d8deeb;
+    font-size: 14px;
+}
+
+.bar {
+    height: 8px;
+    background: #252e45;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6877ff, #9b7cff);
+    border-radius: 10px;
+    transition: width 0.8s ease;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 21px;
+}
+
+.strength,
+.improvement,
+.recommendation {
+    padding: 16px 18px;
+    margin: 11px 0;
+    border-radius: 10px;
+    background: #171f33;
+    border: 1px solid #252e45;
+    color: #cdd5e5;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.strength {
+    border-left: 3px solid #4fd1c5;
+}
+
+.improvement {
+    border-left: 3px solid #f0b85b;
+}
+
+.recommendation {
+    border-left: 3px solid #8b9cff;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.actions button {
+    border: 1px solid #6877ff;
+    padding: 13px 25px;
+    border-radius: 9px;
+    background: #6877ff;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.actions button:hover {
+    background: #5968ef;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(104, 119, 255, 0.25);
+}
+
+.loading {
+    text-align: center;
+    padding: 80px 0;
+    color: #929db5;
+}
+
+.loader {
+    width: 45px;
+    height: 45px;
+    margin: auto;
+    border: 4px solid #252e45;
+    border-top: 4px solid #6877ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error {
+    text-align: center;
+    padding: 25px;
+    border-radius: 12px;
+    background: #25171d;
+    border: 1px solid #61313c;
+    color: #f0a7b4;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 92%;
+        padding-top: 25px;
+    }
+
+    .score-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header {
+        margin-top: 35px;
+    }
+
+    .header h1 {
+        font-size: 30px;
+    }
+
+    .score-card,
+    .categories,
+    .section {
+        padding: 22px;
+    }
+}
