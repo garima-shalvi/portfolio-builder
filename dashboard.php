@@ -9,8 +9,12 @@ if (!isset($_SESSION['auth_id'])) {
 include "db.php";
 
 $user_id = $_SESSION['auth_id'];
-
-
+$template_names = [
+    "portfolio" => "Template 1",
+    "my_template" => "Template 2",
+    "temp-3" => "Template 3",
+    "temp-4" => "Template 4"
+];
 $stmt = $conn->prepare(
     "SELECT id, slug, template_name, created_at
      FROM portfolios
@@ -18,13 +22,10 @@ $stmt = $conn->prepare(
      ORDER BY id DESC
      LIMIT 1"
 );
-
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-
 $result = $stmt->get_result();
 $portfolio = $result->fetch_assoc();
-
 $stmt->close();
 ?>
 
@@ -425,9 +426,8 @@ button,
                     <strong>Template</strong>
 
                     <span>
-                        <?php
-                        echo htmlspecialchars($portfolio['template_name']);
-                        ?>
+                        <?php echo htmlspecialchars($template_names[$portfolio['template_name']] ?? "Unknown"); ?>
+
                     </span>
 
                 </div>
