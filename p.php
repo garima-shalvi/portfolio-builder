@@ -36,6 +36,7 @@ if (!in_array($template, $allowed_templates, true)) {
     die("Invalid template configuration");
 }
 
+define('VIA_P', true);
 $_GET['pid'] = $pid;
 
 include __DIR__ . "/" . $template . ".php";

@@ -1,8 +1,29 @@
 <?php
+session_start();
 require_once "db.php";
 
 $portfolio_id = $_GET['pid'] ?? null;
-if (!$portfolio_id) die("Portfolio not found");
+if (!$portfolio_id || !ctype_digit((string)$portfolio_id)) die("Portfolio not found");
+$portfolio_id = (int)$portfolio_id;
+
+
+if (!defined('VIA_P')) {
+    if (!isset($_SESSION['auth_id'])) {
+        http_response_code(401);
+        die("Not logged in");
+    }
+
+    $check = $conn->prepare("SELECT id FROM portfolios WHERE id=? AND user_id=?");
+    $check->bind_param("ii", $portfolio_id, $_SESSION['auth_id']);
+    $check->execute();
+
+    if (!$check->get_result()->fetch_assoc()) {
+        http_response_code(403);
+        die("Unauthorized");
+    }
+
+    $check->close();
+}
 
 $stmt = $conn->prepare("
     SELECT pd.*

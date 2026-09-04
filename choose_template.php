@@ -1,6 +1,26 @@
 <?php
+session_start();
+require_once "db.php";
+
+if (!isset($_SESSION['auth_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 $portfolio_id = $_GET['pid'] ?? null;
-if (!$portfolio_id) die("Portfolio not found");
+if (!$portfolio_id || !ctype_digit((string)$portfolio_id)) die("Portfolio not found");
+$portfolio_id = (int)$portfolio_id;
+
+$check = $conn->prepare("SELECT id FROM portfolios WHERE id=? AND user_id=?");
+$check->bind_param("ii", $portfolio_id, $_SESSION['auth_id']);
+$check->execute();
+
+if (!$check->get_result()->fetch_assoc()) {
+    http_response_code(403);
+    die("Unauthorized");
+}
+
+$check->close();
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +126,7 @@ h1 {
   <div class="template-grid">
 
     
-    <a href="portfolio.php?pid=<?php echo $portfolio_id; ?>&preview=1" style="text-decoration:none;">
+    <a href="portfolio.php?pid=<?php echo htmlspecialchars((string)$portfolio_id); ?>&preview=1" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template1-preview.png" alt="Template 1">
         <h3>Template 1</h3>
@@ -115,7 +135,7 @@ h1 {
     </a>
 
     
-    <a href="my_template.php?pid=<?php echo $portfolio_id; ?>&preview=2" style="text-decoration:none;">
+    <a href="my_template.php?pid=<?php echo htmlspecialchars((string)$portfolio_id); ?>&preview=2" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template2-preview.png" alt="Template 2">
         <h3>Template 2</h3>
@@ -123,7 +143,7 @@ h1 {
       </div>
     </a>
 
-    <a href="temp-3.php?pid=<?php echo $portfolio_id; ?>&preview=3" style="text-decoration:none;">
+    <a href="temp-3.php?pid=<?php echo htmlspecialchars((string)$portfolio_id); ?>&preview=3" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template3-preview.png" alt="Template 3">
         <h3>Template 3</h3>
@@ -131,7 +151,7 @@ h1 {
       </div>
     </a>
 
-    <a href="temp-4.php?pid=<?php echo $portfolio_id; ?>&preview=4" style="text-decoration:none;">
+    <a href="temp-4.php?pid=<?php echo htmlspecialchars((string)$portfolio_id); ?>&preview=4" style="text-decoration:none;">
       <div class="template-card">
         <img src="images/template4-preview.png" alt="Template 4">
         <h3>Template 4</h3>
