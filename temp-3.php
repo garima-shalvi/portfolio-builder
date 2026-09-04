@@ -4,7 +4,6 @@ require_once "db.php";
 $portfolio_id = $_GET['pid'] ?? null;
 if (!$portfolio_id) die("Portfolio not found");
 
-
 $stmt = $conn->prepare("
     SELECT pd.*
     FROM portfolio_details pd
@@ -20,35 +19,53 @@ if (!$user) {
     die("Portfolio details not found");
 }
 
-
 $education = [];
-$res = $conn->query("SELECT * FROM education WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM education WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $education[] = $row;
-
+$stmt->close();
 
 $skills = [];
-$res = $conn->query("SELECT skill_name FROM skills WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT skill_name FROM skills WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $skills[] = $row['skill_name'];
-
+$stmt->close();
 
 $projects = [];
-$res = $conn->query("SELECT * FROM projects WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM projects WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $projects[] = $row;
-
+$stmt->close();
 
 $experience = [];
-$res = $conn->query("SELECT * FROM experience WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM experience WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $experience[] = $row;
-
+$stmt->close();
 
 $certificates = [];
-$res = $conn->query("SELECT * FROM certificates WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM certificates WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $certificates[] = $row;
+$stmt->close();
 
 $achievements = [];
-$res = $conn->query("SELECT * FROM achievements WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM achievements WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $achievements[] = $row;
-
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,8 +106,6 @@ body{
     overflow-x: hidden;
 }
 
-
-/* FLOATING BLOBS */
 .blob{
     position:fixed;
     width:400px;
@@ -120,8 +135,6 @@ body{
     100%{ transform:translateY(0);}
 }
 
-/* HERO */
-/* HERO SECTION */
 .hero{
     padding:100px 5%;
 }
@@ -134,7 +147,6 @@ body{
     flex-wrap:wrap;
 }
 
-/* LEFT SIDE */
 .hero-left{
     flex:1;
     display:flex;
@@ -155,7 +167,6 @@ body{
     transform:scale(1.15);
 }
 
-/* RIGHT SIDE */
 .hero-right{
     flex:2;
 }
@@ -192,7 +203,6 @@ body{
     transform:translateY(-4px);
 }
 
-/* ILLUSTRATION */
 .hero-illustration img{
     width:300px;
     margin-top:30px;
@@ -251,20 +261,17 @@ section h1{
     animation:glowMove 3s infinite ease-in-out;
 }
 .emoji{
-    color:initial;   /* keeps natural emoji color */
+    color:initial;
     margin-right:8px;
 }
 
 h3{
-    
     color:rgb(237, 198, 250);
     font-size:25px;
-    
 }
 
-/* CARD */
 .card{
-    box-shadow: 0 0 3px 3px rgba(193, 156, 230, 0.96);
+    box-shadow:0 0 3px 3px rgba(193, 156, 230, 0.96);
     background:var(--card);
     padding:25px;
     border-radius:18px;
@@ -277,9 +284,8 @@ h3{
     box-shadow:0 15px 30px rgba(192,132,252,.3);
 }
 
-/* SKILLS */
 .skills span{
-    box-shadow: 0 0 3px 3px rgba(193, 156, 230, 0.96);
+    box-shadow:0 0 3px 3px rgba(193, 156, 230, 0.96);
     display:inline-block;
     background:rgba(192,132,252,.2);
     padding:10px 18px;
@@ -288,10 +294,8 @@ h3{
     transition:all 0.5s ease;
 }
 .skills span:hover{
-transform:scale(1.3)
-
+    transform:scale(1.3)
 }
-/* CERTIFICATES */
 
 .certificate-grid{
     display:flex;
@@ -301,7 +305,6 @@ transform:scale(1.3)
 }
 
 .certificate-card{
-    
     width:300px;
     height:250px;
     background:var(--card);
@@ -315,7 +318,7 @@ transform:scale(1.3)
 .certificate-card img{
     width:100%;
     height:250px;
-    object-fit:cover;   /* fills nicely */
+    object-fit:cover;
     display:block;
 }
 
@@ -329,23 +332,18 @@ transform:scale(1.3)
     color:var(--text);
 }
 
-/* Hover */
 .certificate-card:hover{
     transform:scale(1.5);
     box-shadow:0 15px 30px rgba(192,132,252,.4);
 }
 
-
-/* ACHIEVEMENTS */
 .achievement-grid{
-    
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:25px;
 }
 
 .achievement-card{
-    
     background:linear-gradient(135deg,#2a1b47,#3b1e69);
     padding:25px;
     border-radius:18px;
@@ -356,6 +354,7 @@ transform:scale(1.3)
     transform:translateY(-8px);
     box-shadow:0 15px 35px rgba(192,132,252,.5);
 }
+
 .btn{
     display:inline-block;
     margin-top:15px;
@@ -373,7 +372,6 @@ transform:scale(1.3)
     transform:translateY(-4px);
     box-shadow:0 10px 25px rgba(192,132,252,.6);
 }
-/* ===== Responsive ===== */
 
 @media (max-width:1024px){
 
@@ -423,8 +421,6 @@ transform:scale(1.3)
     }
 }
 
-
-/* SCROLL ANIMATION */
 .hidden{
     opacity:0;
     transform:translateY(40px);
@@ -436,7 +432,6 @@ transform:scale(1.3)
     transform:translateY(0);
 }
 
-
 footer{
     text-align:center;
     padding:30px;
@@ -446,35 +441,31 @@ footer{
 
 <body>
 
-<!-- FLOATING BACKGROUND BLOBS -->
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 
-<!-- HERO SECTION -->
 <section class="hero">
     <div class="hero-container">
 
-        <!-- LEFT SIDE - PROFILE IMAGE -->
         <div class="hero-left">
-            <img src="<?php echo $user['photo']; ?>" class="hero-pic">
+            <img src="<?php echo htmlspecialchars($user['photo']); ?>" class="hero-pic">
         </div>
 
-        <!-- RIGHT SIDE - USER INFO -->
         <div class="hero-right">
-            <h1 class="hea"><?php echo $user['name']; ?></h1>
-            <p class="about"><?php echo $user['about']; ?></p>
+            <h1 class="hea"><?php echo htmlspecialchars($user['name']); ?></h1>
+            <p class="about"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
 
             <div class="hero-buttons">
                 <?php if(!empty($user['resume'])): ?>
-                    <a href="<?php echo $user['resume']; ?>" download>Resume</a>
+                    <a href="<?php echo htmlspecialchars($user['resume']); ?>" download>Resume</a>
                 <?php endif; ?>
 
                 <?php if(!empty($user['linkedin'])): ?>
-                    <a href="<?php echo $user['linkedin']; ?>" target="_blank">LinkedIn</a>
+                    <a href="<?php echo htmlspecialchars($user['linkedin']); ?>" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 <?php endif; ?>
 
                 <?php if(!empty($user['github'])): ?>
-                    <a href="<?php echo $user['github']; ?>" target="_blank">GitHub</a>
+                    <a href="<?php echo htmlspecialchars($user['github']); ?>" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -484,68 +475,63 @@ footer{
 
 <div class="container">
 
-<!-- EDUCATION -->
 <section>
 <h1>🎓 Education</h1>
 <?php foreach($education as $e): ?>
     <div class="card">
-        <h3><?php echo $e['degree']; ?></h3>
-        <p><?php echo $e['institute']; ?></p>
-        <span><?php echo $e['duration']; ?> | <?php echo $e['score']; ?></span>
+        <h3><?php echo htmlspecialchars($e['degree']); ?></h3>
+        <p><?php echo htmlspecialchars($e['institute']); ?></p>
+        <span><?php echo htmlspecialchars($e['duration']); ?> | <?php echo htmlspecialchars($e['score']); ?></span>
     </div>
 <?php endforeach; ?>
 </section>
 
-<!-- SKILLS -->
 <section>
 <h1>
-   <span class="emoji">💻</span> 
+   <span class="emoji">💻</span>
    <span class="heading-text">SKILLS</span>
 </h1>
 <div class="skills">
 <?php foreach($skills as $s): ?>
-    <span><?php echo $s; ?></span>
+    <span><?php echo htmlspecialchars($s); ?></span>
 <?php endforeach; ?>
 </div>
 </section>
 
-<!-- PROJECTS -->
 <section>
 <h1>
-   <span class="emoji">🚀</span> 
+   <span class="emoji">🚀</span>
    <span class="heading-text">PROJECTS</span>
 </h1>
 <?php foreach($projects as $p): ?>
     <div class="card">
-        <h3><?php echo $p['title']; ?></h3><br>
-        <p><?php echo $p['description']; ?></p><br>
-        <small><?php echo $p['tech_stack']; ?></small><br>
+        <h3><?php echo htmlspecialchars($p['title']); ?></h3><br>
+        <p><?php echo nl2br(htmlspecialchars($p['description'])); ?></p><br>
+        <small><?php echo htmlspecialchars($p['tech_stack']); ?></small><br>
         <?php if(!empty($p['project_link'])): ?>
-            <a href="<?php echo $p['project_link']; ?>" target="_blank" class="btn">View Project</a>
+            <a href="<?php echo htmlspecialchars($p['project_link']); ?>" target="_blank" rel="noopener noreferrer" class="btn">View Project</a>
         <?php endif; ?>
     </div>
 <?php endforeach; ?>
 </section>
 
-<!-- EXPERIENCE -->
 <section>
 <h1>
-   <span class="emoji">📈</span> 
+   <span class="emoji">📈</span>
    <span class="heading-text">EXPERIENCES</span>
 </h1>
 <?php foreach($experience as $ex): ?>
     <div class="card">
-        <h3><?php echo $ex['role']; ?> - <?php echo $ex['company']; ?></h3><br>
-        Duration:  <span><?php echo $ex['duration']; ?></span><br><br>
-        <p><?php echo $ex['description']; ?></p>
+        <h3><?php echo htmlspecialchars($ex['role']); ?> - <?php echo htmlspecialchars($ex['company']); ?></h3><br>
+        Duration: <span><?php echo htmlspecialchars($ex['duration']); ?></span><br><br>
+        <p><?php echo nl2br(htmlspecialchars($ex['description'])); ?></p>
     </div>
 <?php endforeach; ?>
 </section>
 
-<!-- CERTIFICATES -->
 <section>
 <h1>
-   <span class="emoji">📜</span> 
+   <span class="emoji">📜</span>
    <span class="heading-text">Certificates</span>
 </h1>
 <div class="certificate-grid">
@@ -553,29 +539,28 @@ footer{
 <?php foreach($certificates as $c): ?>
     <?php if(!empty($c['certificate_file'])): ?>
         <div class="certificate-card">
-            <img src="<?php echo $c['certificate_file']; ?>" alt="">
+            <img src="<?php echo htmlspecialchars($c['certificate_file']); ?>" alt="">
             <div class="certificate-title">
-                <?php echo $c['certificate_name']; ?>
+                <?php echo htmlspecialchars($c['certificate_name']); ?>
             </div>
         </div>
     <?php endif; ?>
+
 <?php endforeach; ?>
 
 </div>
 </section>
 
-
-<!-- ACHIEVEMENTS -->
 <section>
 <h1>
-   <span class="emoji">🏆</span> 
+   <span class="emoji">🏆</span>
    <span class="heading-text">ACHIEVEMENTS</span>
 </h1>
 <div class="achievement-grid">
 <?php foreach($achievements as $a): ?>
     <div class="achievement-card">
-        <h3><?php echo $a['title']; ?></h3>
-        <p><?php echo $a['description']; ?></p>
+        <h3><?php echo htmlspecialchars($a['title']); ?></h3>
+        <p><?php echo nl2br(htmlspecialchars($a['description'])); ?></p>
     </div>
 <?php endforeach; ?>
 </div>
@@ -584,10 +569,9 @@ footer{
 </div>
 
 <footer>
-© <?php echo date("Y"); ?> <?php echo $user['name']; ?>
+© <?php echo date("Y"); ?> <?php echo htmlspecialchars($user['name']); ?>
 </footer>
 
-<!-- SCROLL ANIMATION SCRIPT -->
 <script>
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -606,9 +590,10 @@ document.querySelectorAll('section, .card, .certificate-card, .achievement-card'
 
 </body>
 </html>
+
 <?php if(isset($_GET['preview'])): ?>
     <div style="text-align:center; padding:20px; background:#000;">
-        <a href="save_template.php?pid=<?php echo $portfolio_id; ?>&template=temp-3"
+        <a href="save_template.php?pid=<?php echo urlencode($portfolio_id); ?>&template=temp-3"
            style="padding:12px 25px;
                   background:#39e6d6;
                   color:#000;

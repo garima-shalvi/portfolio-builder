@@ -4,7 +4,6 @@ require_once "db.php";
 $portfolio_id = $_GET['pid'] ?? null;
 if (!$portfolio_id) die("Portfolio not found");
 
-
 $stmt = $conn->prepare("
     SELECT pd.*
     FROM portfolio_details pd
@@ -21,32 +20,52 @@ if (!$user) {
 }
 
 $education = [];
-$res = $conn->query("SELECT * FROM education WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM education WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $education[] = $row;
-
+$stmt->close();
 
 $skills = [];
-$res = $conn->query("SELECT skill_name FROM skills WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT skill_name FROM skills WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $skills[] = $row['skill_name'];
-
+$stmt->close();
 
 $projects = [];
-$res = $conn->query("SELECT * FROM projects WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM projects WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $projects[] = $row;
-
+$stmt->close();
 
 $experience = [];
-$res = $conn->query("SELECT * FROM experience WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM experience WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $experience[] = $row;
-
+$stmt->close();
 
 $certificates = [];
-$res = $conn->query("SELECT * FROM certificates WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM certificates WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $certificates[] = $row;
+$stmt->close();
 
 $achievements = [];
-$res = $conn->query("SELECT * FROM achievements WHERE portfolio_id=$portfolio_id");
+$stmt = $conn->prepare("SELECT * FROM achievements WHERE portfolio_id=?");
+$stmt->bind_param("i", $portfolio_id);
+$stmt->execute();
+$res = $stmt->get_result();
 while ($row = $res->fetch_assoc()) $achievements[] = $row;
+$stmt->close();
 
 ?>
 
@@ -73,16 +92,12 @@ body{
   color:var(--text);
   scroll-behavior:smooth;
 }
-
-
 .container{
   width:90%;
   max-width:1200px;
   margin:auto;
   padding-bottom:50px;
 }
-
-
 .hero{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -103,8 +118,6 @@ body{
 .photo:hover{
   transform:scale(1.1);
 }
-
-
 .float{
   display:inline-block;
   animation: float 4s ease-in-out infinite alternate;
@@ -112,8 +125,6 @@ body{
 .buttons a{
   animation: float 1s ease-in-out infinite alternate;
 }
-
-
 .badge{
   display:inline-block;
   padding:8px 18px;
@@ -122,8 +133,6 @@ body{
   color:var(--accent);
   margin-bottom:20px;
 }
-
-
 .hero h1{
   font-size:48px;
 }
@@ -154,14 +163,12 @@ body{
 }
 .btn:hover{transform:translateY(-2px) scale(1.05);}
 
-
 section{margin-top:90px; animation: fadeIn 5s ease;}
 section h1{
   text-align:center;
   color:var(--accent);
   margin-bottom:40px;
 }
-
 
 .cards{
   display:grid;
@@ -180,7 +187,6 @@ section h1{
   transform:scale(1.05);
   box-shadow:0 0 20px var(--shadow);
 }
-
 
 .skills-container {
     width: 100%;
@@ -237,7 +243,7 @@ section h1{
 .certs{
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap:10px;              /* IMPORTANT: space for hover */
+  gap:10px;
   justify-items:center;
   align-items:start;
   padding:20px 0;
@@ -276,9 +282,6 @@ section h1{
   text-align:center;
   word-break:break-word;
 }
-
-
-
 @keyframes float{
   0%{transform:translateY(0);}
   100%{transform:translateY(-10px);}
@@ -287,8 +290,6 @@ section h1{
   0%{opacity:0; transform:translateY(20px);}
   100%{opacity:1; transform:translateY(0);}
 }
-
-
 footer{
   text-align:center;
   padding:60px 0;
@@ -300,46 +301,42 @@ footer{
 
 <div class="container">
 
-
 <div class="hero">
   <div>
     <div class="badge float">✨ Available for hire</div>
     <h1>Hello, I'm <span><?php echo htmlspecialchars($user['name']); ?></span></h1>
     <div class="personal">
-      <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
-      <p><strong>Phone:</strong> <?php echo $user['phone']; ?></p>
-      <p><strong>Address:</strong> <?php echo $user['address']; ?></p>
+      <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+      <p><strong>Phone:</strong> <?php echo htmlspecialchars($user['phone']); ?></p>
+      <p><strong>Address:</strong> <?php echo htmlspecialchars($user['address']); ?></p>
     </div>
-    <p style="margin-top:20px;color:var(--muted);"><?php echo $user['about']; ?></p>
+    <p style="margin-top:20px;color:var(--muted);"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
     <div class="buttons">
-      <!-- <a href="mailto:<?php echo $user['email']; ?>" class="btn float">Contact Me</a> -->
-      <a href="<?php echo $user['resume']; ?>" download class="btn outline float">🧑‍💼Resume</a>
+      <a href="<?php echo htmlspecialchars($user['resume']); ?>" download class="btn outline float">🧑‍💼Resume</a>
       <?php if(!empty($user['linkedin'])): ?>
-        <a href="<?php echo $user['linkedin']; ?>" target="_blank" class="btn outline float">🔗LinkedIn💼</a>
+        <a href="<?php echo htmlspecialchars($user['linkedin']); ?>" target="_blank" rel="noopener noreferrer" class="btn outline float">🔗LinkedIn💼</a>
       <?php endif; ?>
       <?php if(!empty($user['github'])): ?>
-        <a href="<?php echo $user['github']; ?>" target="_blank" class="btn outline float">🐙GitHub💻</a>
+        <a href="<?php echo htmlspecialchars($user['github']); ?>" target="_blank" rel="noopener noreferrer" class="btn outline float">🐙GitHub💻</a>
       <?php endif; ?>
     </div>
   </div>
-  <img src="<?php echo $user['photo']; ?>" class="photo">
+  <img src="<?php echo htmlspecialchars($user['photo']); ?>" class="photo">
 </div>
-
 
 <section>
 <h1>🎓Education🏫</h1>
 <div class="cards">
 <?php foreach($education as $e): ?>
   <div class="card">
-    <h2><?php echo $e['degree']; ?></h2><br>
-    <p><?php echo $e['institute']; ?></p><br>
-    <p><?php echo $e['duration']; ?></p><br>
-    <p>Score: <?php echo $e['score']; ?></p><br>
+    <h2><?php echo htmlspecialchars($e['degree']); ?></h2><br>
+    <p><?php echo htmlspecialchars($e['institute']); ?></p><br>
+    <p><?php echo htmlspecialchars($e['duration']); ?></p><br>
+    <p>Score: <?php echo htmlspecialchars($e['score']); ?></p><br>
   </div>
 <?php endforeach; ?>
 </div>
 </section>
-
 
 <section>
     <h1>⚡Skills⚡</h1>
@@ -362,76 +359,72 @@ footer{
     </div>
 </section>
 
-
 <section>
 <h1>🚀Projects🧩</h1>
 <div class="cards">
 <?php foreach($projects as $p): ?>
   <div class="card">
-    <h2><?php echo $p['title']; ?></h2><br>
-    <p><?php echo $p['description']; ?></p><br>
-    <p><strong>Tech:</strong> <?php echo $p['tech_stack']; ?></p><br>
+    <h2><?php echo htmlspecialchars($p['title']); ?></h2><br>
+    <p><?php echo nl2br(htmlspecialchars($p['description'])); ?></p><br>
+    <p><strong>Tech:</strong> <?php echo htmlspecialchars($p['tech_stack']); ?></p><br>
     <?php if($p['project_link']): ?>
-      <a href="<?php echo $p['project_link']; ?>" target="_blank" class="btn outline float">View Project</a>
+      <a href="<?php echo htmlspecialchars($p['project_link']); ?>" target="_blank" rel="noopener noreferrer" class="btn outline float">View Project</a>
     <?php endif; ?>
   </div>
 <?php endforeach; ?>
 </div>
 </section>
 
-
 <section>
 <h1>📈Experience🏢</h1>
 <div class="cards">
 <?php foreach($experience as $ex): ?>
   <div class="card">
-    <h2><?php echo $ex['role']; ?></h2><br>
-    <p><?php echo $ex['company']; ?></p><br>
-    <p><?php echo $ex['duration']; ?></p><br>
-    <p><?php echo $ex['description']; ?></p><br>
+    <h2><?php echo htmlspecialchars($ex['role']); ?></h2><br>
+    <p><?php echo htmlspecialchars($ex['company']); ?></p><br>
+    <p><?php echo htmlspecialchars($ex['duration']); ?></p><br>
+    <p><?php echo nl2br(htmlspecialchars($ex['description'])); ?></p><br>
   </div>
 <?php endforeach; ?>
 </div>
 </section>
-
 
 <section>
 <h1>📜Certificates🏅</h1>
 <div class="certs">
 <?php foreach($certificates as $c): ?>
   <div class="cert">
-    <img src="<?php echo $c['certificate_file']; ?>" title="<?php echo $c['certificate_name']; ?>">
-    <div class="cert-name"><?php echo $c['certificate_name']; ?></div>
+    <img src="<?php echo htmlspecialchars($c['certificate_file']); ?>" title="<?php echo htmlspecialchars($c['certificate_name']); ?>">
+    <div class="cert-name"><?php echo htmlspecialchars($c['certificate_name']); ?></div>
   </div>
 <?php endforeach; ?>
 </div>
 </section>
+
 <section>
 <h1>🌟Achievements🏆</h1>
 <div class="cards">
 <?php foreach($achievements as $p): ?>
   <div class="card">
-    <h2><?php echo $p['title']; ?></h2><br>
-    <p><?php echo $p['description']; ?></p><br>
-    <!-- <p><strong>Tech:</strong> <?php echo $p['tech_stack']; ?></p><br>
-    <?php if($p['project_link']): ?>
-      <a href="<?php echo $p['project_link']; ?>" target="_blank" class="btn outline float">View Project</a>
-    <?php endif; ?> -->
+    <h2><?php echo htmlspecialchars($p['title']); ?></h2><br>
+    <p><?php echo nl2br(htmlspecialchars($p['description'])); ?></p><br>
   </div>
 <?php endforeach; ?>
 </div>
 </section>
+
 </div>
 
 <footer>
-© <?php echo date("Y"); ?> <?php echo $user['name']; ?>
+© <?php echo date("Y"); ?> <?php echo htmlspecialchars($user['name']); ?>
 </footer>
 
 </body>
 </html>
+
 <?php if(isset($_GET['preview'])): ?>
     <div style="text-align:center; padding:20px; background:#000;">
-        <a href="save_template.php?pid=<?php echo $portfolio_id; ?>&template=portfolio"
+        <a href="save_template.php?pid=<?php echo urlencode($portfolio_id); ?>&template=portfolio"
            style="padding:12px 25px;
                   background:#39e6d6;
                   color:#000;
