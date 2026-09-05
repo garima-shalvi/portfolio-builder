@@ -386,6 +386,7 @@ hr {
 <body>
 
 <div class="container">
+<a href="dashboard.php" style="display:inline-block; margin-bottom:14px; color:#555; text-decoration:none; font-size:14px;">← Back to Dashboard</a>
 <h1 class="metallic-text">Portfolio / Resume Builder</h1>
 
 <?php if (!empty($error)): ?>

@@ -884,9 +884,10 @@ track.style.transform = `translateX(-${certIndex * 100}%)`;
 
 <?php if(isset($_GET['preview'])): ?>
 <div style="text-align:center; padding:20px; background:#000;">
+<a href="dashboard.php" style="color:#ffaedb; text-decoration:none; margin-right:20px; font-size:14px;">← Back to Dashboard</a>
 <a href="save_template.php?pid=<?= $portfolio_id ?>&template=my_template"
 style="padding:12px 25px;
-background:#39e6d6;
+background:#ffaedb;
 color:#000;
 font-weight:bold;
 border-radius:8px;

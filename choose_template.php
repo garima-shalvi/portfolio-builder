@@ -121,6 +121,7 @@ h1 {
 <body>
 
 <div class="container">
+  <a href="dashboard.php" style="display:inline-block; margin-bottom:20px; text-decoration:none; color:#fff; opacity:0.85;">← Back to Dashboard</a>
   <h1>Choose Your Portfolio Template</h1>
 
   <div class="template-grid">

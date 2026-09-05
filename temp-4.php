@@ -1063,10 +1063,11 @@ window.addEventListener("load",revealOnScroll);
 
 <?php if(isset($_GET['preview'])): ?>
 <div style="text-align:center; padding:20px; background:#000;">
+<a href="dashboard.php" style="color:#00ffff; text-decoration:none; margin-right:20px; font-size:14px;">← Back to Dashboard</a>
 <a href="save_template.php?pid=<?= $portfolio_id ?>&template=temp-4"
 style="padding:12px 25px;
-background:#39e6d6;
-color:#000;
+background:#00ffff;
+color:#001f3f;
 font-weight:bold;
 border-radius:8px;
 text-decoration:none;">

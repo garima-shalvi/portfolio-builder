@@ -445,6 +445,10 @@ footer{
 
 <?php if(isset($_GET['preview'])): ?>
     <div style="text-align:center; padding:20px; background:#000;">
+        <a href="dashboard.php"
+           style="color:#39e6d6; text-decoration:none; margin-right:20px; font-size:14px;">
+            ← Back to Dashboard
+        </a>
         <a href="save_template.php?pid=<?php echo urlencode($portfolio_id); ?>&template=portfolio"
            style="padding:12px 25px;
                   background:#39e6d6;

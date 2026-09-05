@@ -613,10 +613,14 @@ document.querySelectorAll('section, .card, .certificate-card, .achievement-card'
 
 <?php if(isset($_GET['preview'])): ?>
     <div style="text-align:center; padding:20px; background:#000;">
+        <a href="dashboard.php"
+           style="color:#c084fc; text-decoration:none; margin-right:20px; font-size:14px;">
+            ← Back to Dashboard
+        </a>
         <a href="save_template.php?pid=<?php echo urlencode($portfolio_id); ?>&template=temp-3"
            style="padding:12px 25px;
-                  background:#39e6d6;
-                  color:#000;
+                  background:linear-gradient(135deg,#8b5cf6,#c084fc);
+                  color:#140c24;
                   font-weight:bold;
                   border-radius:8px;
                   text-decoration:none;">
