@@ -7,6 +7,7 @@ if (!isset($_SESSION['auth_id'])) {
 }
 
 include "db.php";
+require_once "config.php";
 
 $user_id = $_SESSION['auth_id'];
 $template_names = [
@@ -404,7 +405,7 @@ button,
         <?php
 
         $portfolio_url =
-            "http://localhost/Portfolio%20Builder/p.php?slug="
+            BASE_URL . "p.php?slug="
             . urlencode($portfolio['slug']);
 
         ?>
